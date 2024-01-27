@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  pik-api:
+    build: .
+    command: ["gunicorn", "app.main:app", "--workers", "2", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind=0.0.0.0:8000"]
+    ports:
+        - "9001:8000"
+  bot:
+    build: .
+    env_file:
+      - .env
+    command: ["python", "app/bot/bot.py"]
+    restart: always
+    depends_on:
+      - pik-api
